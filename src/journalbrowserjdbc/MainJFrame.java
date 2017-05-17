@@ -25,9 +25,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import manager.DbManager;
 import models.MainInfoModel;
@@ -354,27 +356,32 @@ public class MainJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowOpened
 
     private void updateInfo(){
-        assessments = model.getAssessments();
-        teachers = model.getTeachers();
-        students = model.getStudents();
-        subjects = model.getSubjects();
-        testTypes = model.getTestTypes();
-        
-        tableModel.setRowCount(0);
-        tableModel.setColumnCount(0);
-        
-        tableModel.addColumn("id");
-        tableModel.addColumn("date_assessment");
-        tableModel.addColumn("field_assessment");
-        tableModel.addColumn("student");
-        tableModel.addColumn("subject");
-        tableModel.addColumn("teacher");
-        tableModel.addColumn("test_type");
-
-        for(Assessment e : assessments){
-            tableModel.addRow(new String[]{e.getId()+"",e.getDate_assessment().toString(),e.getField_assessment()+"",
-                                            getStudentName(e.getId_student()), getSubjectName(e.getId_subject()),
-                                            getTeacherName(e.getId_teacher()),getTestTypeName(e.getId_test_type())});
+        try {
+            assessments = model.getAssessments();
+            teachers = model.getTeachers();
+            students = model.getStudents();
+            subjects = model.getSubjects();
+            testTypes = model.getTestTypes();
+            
+            tableModel.setRowCount(0);
+            tableModel.setColumnCount(0);
+            
+            tableModel.addColumn("id");
+            tableModel.addColumn("date_assessment");
+            tableModel.addColumn("field_assessment");
+            tableModel.addColumn("student");
+            tableModel.addColumn("subject");
+            tableModel.addColumn("teacher");
+            tableModel.addColumn("test_type");
+            
+            for(Assessment e : assessments){
+                tableModel.addRow(new String[]{e.getId()+"",e.getDate_assessment().toString(),e.getField_assessment()+"",
+                    getStudentName(e.getId_student()), getSubjectName(e.getId_subject()),
+                    getTeacherName(e.getId_teacher()),getTestTypeName(e.getId_test_type())});
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+            Logger.getLogger(AssessmentEditJFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -492,8 +499,13 @@ public class MainJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnChangeActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        model.delete(assessments.get(jTable1.getSelectedRow()));
-        updateInfo();
+        try {
+            model.delete(assessments.get(jTable1.getSelectedRow()));
+            updateInfo();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+            Logger.getLogger(AssessmentEditJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed

@@ -10,11 +10,13 @@ import entities.Assessment;
 import entities.*;
 import entities.Teacher;
 import entities.TestType;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import manager.DbManager;
 import models.MainInfoModel;
 
@@ -192,6 +194,10 @@ public class ChangeMainInfoJDialog extends javax.swing.JFrame  {
 
             model.update(entity);
         } catch (ParseException ex) {
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+            Logger.getLogger(AssessmentEditJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
             Logger.getLogger(AssessmentEditJFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
         
@@ -199,37 +205,42 @@ public class ChangeMainInfoJDialog extends javax.swing.JFrame  {
     }//GEN-LAST:event_btnOKActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        model.setDbManager(dbManager);
-        teachers = model.getTeachers();
-        students = model.getStudents();
-        subjects = model.getSubjects();
-        testTypes = model.getTestTypes();
-        
-        cbIDStudent.removeAllItems();
-        cbIdSubject.removeAllItems();
-        cbIdTeacher.removeAllItems();
-        cbIdTestType.removeAllItems();
-        cbAssessment.removeAllItems();
-        
-        cbAssessment.addItem(AssessmentsEnum.bad.name());
-        cbAssessment.addItem(AssessmentsEnum.satisfactory.name());
-        cbAssessment.addItem(AssessmentsEnum.good.name());
-        cbAssessment.addItem(AssessmentsEnum.exelent.name());
-        
-        for(Teacher e : teachers){
-            cbIdTeacher.addItem(e.getSurname() + " " + e.getFirst_name());
-        }
-        
-        for(Student e : students){
-            cbIDStudent.addItem(e.getSurname() + " " + e.getFirst_name());
-        }
-        
-        for(Subject e : subjects){
-            cbIdSubject.addItem(e.getAbbreviation());
-        }
-        
-        for(TestType e : testTypes){
-            cbIdTestType.addItem(e.getName());
+        try {
+            model.setDbManager(dbManager);
+            teachers = model.getTeachers();
+            students = model.getStudents();
+            subjects = model.getSubjects();
+            testTypes = model.getTestTypes();
+            
+            cbIDStudent.removeAllItems();
+            cbIdSubject.removeAllItems();
+            cbIdTeacher.removeAllItems();
+            cbIdTestType.removeAllItems();
+            cbAssessment.removeAllItems();
+            
+            cbAssessment.addItem(AssessmentsEnum.bad.name());
+            cbAssessment.addItem(AssessmentsEnum.satisfactory.name());
+            cbAssessment.addItem(AssessmentsEnum.good.name());
+            cbAssessment.addItem(AssessmentsEnum.exelent.name());
+            
+            for(Teacher e : teachers){
+                cbIdTeacher.addItem(e.getSurname() + " " + e.getFirst_name());
+            }
+            
+            for(Student e : students){
+                cbIDStudent.addItem(e.getSurname() + " " + e.getFirst_name());
+            }
+            
+            for(Subject e : subjects){
+                cbIdSubject.addItem(e.getAbbreviation());
+            }
+            
+            for(TestType e : testTypes){
+                cbIdTestType.addItem(e.getName());
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+            Logger.getLogger(AssessmentEditJFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_formWindowOpened
 
